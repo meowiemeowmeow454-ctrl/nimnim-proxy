@@ -40,22 +40,22 @@ app.post('/api/v1/chat/completions', async (req, res) => {
     const { messages, temperature, max_tokens, stream } = req.body;
     
     const response = await axios.post(
-      `${NIM_API_BASE}/chat/completions`,
-      {
-        model: NIM_MODEL,
-        messages: messages,
-        temperature: temperature || 0.7,
-        max_tokens: max_tokens || 2000,
-        stream: stream || false
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${NIM_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        timeout: 120000
-      }
-    );
+  `${NIM_API_BASE}/chat/completions`,
+  {
+    model: NIM_MODEL,
+    messages: messages,
+    temperature: temperature || 0.7,
+    max_tokens: max_tokens !== undefined && max_tokens !== null ? max_tokens : 8192,  // ← FIXED!
+    stream: stream || false
+  },
+  {
+    headers: {
+      'Authorization': `Bearer ${NIM_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    timeout: 600000  // 10 minutes
+  }
+);
     
     res.json(response.data);
     
